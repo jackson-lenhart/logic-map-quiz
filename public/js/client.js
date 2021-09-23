@@ -141,20 +141,28 @@ window.addEventListener('load', function() {
     allQuestions[STATE.questionIndex].choices.forEach(function(choice, choiceIndex) {
       var choiceId = '' + STATE.questionIndex + choiceIndex;
 
-      var choiceInputEl = document.createElement('input');
-      choiceInputEl.type = 'radio';
-      choiceInputEl.name = 'choices'
-      choiceInputEl.id = choiceId;
-      choiceInputEl.value = choiceId
+      // <div class="radio"><label><input type="radio" name="optionsRadios" id="optionsRadios' + id + '" value="' + choice + '" checked>' + choice + '</label></div>'
 
-      var choiceLabelEl = document.createElement('label');
-      choiceLabelEl.htmlFor = choiceId;
-      choiceLabelEl.textContent = choice;
+      // var choiceContainerEl = document.createElement('div');
+      // choiceContainerEl.className = 'radio';
 
-      choicesEl.appendChild(choiceInputEl);
-      choicesEl.appendChild(choiceLabelEl);
+      // var choiceInputEl = document.createElement('input');
+      // choiceInputEl.type = 'radio';
+      // choiceInputEl.name = 'choices'
+      // choiceInputEl.id = choiceId;
+      // choiceInputEl.value = choiceId
 
-      choicesEl.appendChild(document.createElement('br'));
+      // var choiceLabelEl = document.createElement('label');
+      // choiceLabelEl.htmlFor = choiceId;
+      // choiceLabelEl.textContent = choice;
+
+      // choiceContainerEl.appendChild(choiceInputEl);
+      // choiceContainerEl.appendChild(choiceLabelEl);
+      // choiceContainerEl.appendChild(document.createElement('br'));
+
+      // choicesEl.appendChild(choiceContainerEl);
+
+      $('#choices').append('<div class="radio"><label><input type="radio" name="choices" id="' + choiceId + '" value="' + choiceId + '">' + choice + '</label></div>')
     });
   }
 
@@ -183,8 +191,12 @@ window.addEventListener('load', function() {
           selectionStr = selectionStr.concat(selection);
         });
 
-        questionEl.textContent = 'DUMMY PRODUCT ID ' + allOutcomes[selectionStr].productId;
-        choicesEl.textContent = allOutcomes[selectionStr].description;
+        nextButton.style.display = 'none';
+        questionEl.style.display = 'none';
+        choicesEl.style.display = 'none';
+
+        var resultsEl = document.getElementById('results');
+        resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
       } else {
         renderQuestion();
       }

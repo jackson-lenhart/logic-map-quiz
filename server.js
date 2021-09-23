@@ -4,12 +4,10 @@ const express = require('express');
 
 const app = express();
 
-app.get('/client.js', function(req, res) {
-  res.sendFile('c:/projects/logic-map-quiz/client.js');
-});
+app.use(express.static('c:/projects/logic-map-quiz/public'));
 
 app.get('/', function(req, res) {
-  res.sendFile('c:/projects/logic-map-quiz/index.html');
+  res.sendFile('c:/projects/logic-map-quiz/public/index.html');
 });
 
 app.listen(8080, function() {
