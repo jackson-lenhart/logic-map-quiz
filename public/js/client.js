@@ -209,9 +209,6 @@ window.addEventListener('load', function() {
           STATE.selections.push(event.target.id);
         }
 
-        // DEBUG:
-        console.log('Selections from event listener:', STATE.selections);
-
         cleanupNode(choicesEl);
         ['0', '1', '2'].forEach(function(numChar) {
           // Reset number to gray
@@ -250,10 +247,6 @@ window.addEventListener('load', function() {
 
           questionEl.style.display = 'none';
           choicesEl.style.display = 'none';
-
-          // DEBUG:
-          console.log('Selection string:', selectionStr);
-          console.log('Selections:', STATE.selections);
 
           var resultsEl = document.getElementById('results');
           resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
