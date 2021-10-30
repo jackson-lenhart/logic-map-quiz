@@ -132,11 +132,34 @@ function cleanupNode(node) {
 
 window.addEventListener('load', function() {
   var questionEl = document.getElementById('question');
-  var choicesEl = document.querySelector('.quiz-button-box');
+  var choicesEl = document.getElementById('choices-container');
 
   function renderQuestion() {
     var currentNumQuestionEl = document.getElementById('num-question-' + STATE.questionIndex);
-    currentNumQuestionEl.className = 'quiz-num-block _1';
+    currentNumQuestionEl.style = 'display: -webkit-box;'
+      + 'display: -webkit-flex;'
+      + 'display: -ms-flexbox;'
+      + 'display: flex;'
+      + 'width: 65px;'
+      + 'height: 65px;'
+      + '-webkit-box-pack: center;'
+      + '-webkit-justify-content: center;'
+      + '-ms-flex-pack: center;'
+      + 'justify-content: center;'
+      + '-webkit-box-align: center;'
+      + '-webkit-align-items: center;'
+      + '-ms-flex-align: center;'
+      + 'align-items: center;'
+      + 'border-style: solid;'
+      + 'border-width: 10px;'
+      + 'border-color: #dbdbdb;'
+      + 'border-radius: 50px;'
+      + 'background-color: #fff;'
+      + 'width: 30px;'
+      + 'height: 30px;'
+      + 'border-width: 3px;'
+      + 'border-color: #fff;'
+      + 'background-color: #3a75ff;';
 
     questionEl.textContent = allQuestions[STATE.questionIndex].question;
 
@@ -144,12 +167,38 @@ window.addEventListener('load', function() {
       var choiceId = '' + STATE.questionIndex + choiceIndex;
 
       var choiceText = document.createElement('h3');
-      choiceText.className = 'small-sub-text button';
+      choiceText.style = "font-family: 'Extratype eina 03', sans-serif;"
+        + 'color: #101010;'
+        + 'font-size: 16px;'
+        + 'line-height: 148%;'
+        + 'font-weight: 400;'
+        + 'margin-top: 0px;'
+        + 'margin-bottom: 0px;'
+        + 'color: #080b5f;'
+        + 'font-weight: 600;';
       choiceText.textContent = choice;
 
       var choiceButtonEl = document.createElement('div');
-      choiceButtonEl.className = 'quiz-button';
       choiceButtonEl.id = choiceId;
+      choiceButtonEl.style = 'quiz-display: -webkit-box;'
+        + 'display: -webkit-flex;'
+        + 'display: -ms-flexbox;'
+        + 'display: flex;'
+        + 'width: 120px;'
+        + 'height: 55px;'
+        + 'margin-right: 15px;'
+        + 'margin-left: 15px;'
+        + '-webkit-box-pack: center;'
+        + '-webkit-justify-content: center;'
+        + '-ms-flex-pack: center;'
+        + 'justify-content: center;'
+        + '-webkit-box-align: center;'
+        + '-webkit-align-items: center;'
+        + '-ms-flex-align: center;'
+        + 'align-items: center;'
+        + 'border-radius: 16px;'
+        + 'background-color: #fff;'
+        + 'choiceButtonEl.id = choiceId;';
 
       choiceButtonEl.appendChild(choiceText);
 
@@ -160,11 +209,37 @@ window.addEventListener('load', function() {
           STATE.selections.push(event.target.id);
         }
 
+        // DEBUG:
+        console.log('Selections from event listener:', STATE.selections);
+
         cleanupNode(choicesEl);
         ['0', '1', '2'].forEach(function(numChar) {
           // Reset number to gray
-          document.getElementById('num-question-' + numChar).className = 'quiz-num-block _2';
-        })
+          document.getElementById('num-question-' + numChar).style = 'display: -webkit-box;'
+            + 'display: -webkit-flex;'
+            + 'display: -ms-flexbox;'
+            + 'display: flex;'
+            + 'width: 65px;'
+            + 'height: 65px;'
+            + '-webkit-box-pack: center;'
+            + '-webkit-justify-content: center;'
+            + '-ms-flex-pack: center;'
+            + 'justify-content: center;'
+            + '-webkit-box-align: center;'
+            + '-webkit-align-items: center;'
+            + '-ms-flex-align: center;'
+            + 'align-items: center;'
+            + 'border-style: solid;'
+            + 'border-width: 10px;'
+            + 'border-color: #dbdbdb;'
+            + 'border-radius: 50px;'
+            + 'background-color: #fff;'
+            + 'width: 30px;'
+            + 'height: 30px;'
+            + 'border-width: 3px;'
+            + 'border-color: #fff;'
+            + 'background-color: #cecedf;';
+        });
         STATE.questionIndex++;
 
         if (STATE.questionIndex >= allQuestions.length) {
@@ -175,6 +250,10 @@ window.addEventListener('load', function() {
 
           questionEl.style.display = 'none';
           choicesEl.style.display = 'none';
+
+          // DEBUG:
+          console.log('Selection string:', selectionStr);
+          console.log('Selections:', STATE.selections);
 
           var resultsEl = document.getElementById('results');
           resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
