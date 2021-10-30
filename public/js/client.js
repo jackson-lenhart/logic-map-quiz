@@ -16,7 +16,7 @@ var allQuestions = [
       'Small Room (~300sq ft)',
       'Large Room (~800sq ft)',
       'Lots of Rooms (~1250sq ft)',
-      'Entire Home/ Business (depending on previous answer) (~2500+sq ft)'
+      'Huge area (~2500+sq ft)'
     ]
   },
   {
@@ -132,77 +132,60 @@ function cleanupNode(node) {
 
 window.addEventListener('load', function() {
   var questionEl = document.getElementById('question');
-  var choicesEl = document.getElementById('choices');
-  var nextButton = document.getElementById('next');
+  var choicesEl = document.querySelector('.quiz-button-box');
 
   function renderQuestion() {
+    var currentNumQuestionEl = document.getElementById('num-question-' + STATE.questionIndex);
+    currentNumQuestionEl.className = 'quiz-num-block _1';
+
     questionEl.textContent = allQuestions[STATE.questionIndex].question;
 
     allQuestions[STATE.questionIndex].choices.forEach(function(choice, choiceIndex) {
       var choiceId = '' + STATE.questionIndex + choiceIndex;
 
-      // <div class="radio"><label><input type="radio" name="optionsRadios" id="optionsRadios' + id + '" value="' + choice + '" checked>' + choice + '</label></div>'
+      var choiceText = document.createElement('h3');
+      choiceText.className = 'small-sub-text button';
+      choiceText.textContent = choice;
 
-      // var choiceContainerEl = document.createElement('div');
-      // choiceContainerEl.className = 'radio';
+      var choiceButtonEl = document.createElement('div');
+      choiceButtonEl.className = 'quiz-button';
+      choiceButtonEl.id = choiceId;
 
-      // var choiceInputEl = document.createElement('input');
-      // choiceInputEl.type = 'radio';
-      // choiceInputEl.name = 'choices'
-      // choiceInputEl.id = choiceId;
-      // choiceInputEl.value = choiceId
+      choiceButtonEl.appendChild(choiceText);
 
-      // var choiceLabelEl = document.createElement('label');
-      // choiceLabelEl.htmlFor = choiceId;
-      // choiceLabelEl.textContent = choice;
+      choiceButtonEl.addEventListener('click', function(event) {
+        if (event.target.tagName === 'H3') {
+          STATE.selections.push(event.target.parentNode.id);
+        } else {
+          STATE.selections.push(event.target.id);
+        }
 
-      // choiceContainerEl.appendChild(choiceInputEl);
-      // choiceContainerEl.appendChild(choiceLabelEl);
-      // choiceContainerEl.appendChild(document.createElement('br'));
+        cleanupNode(choicesEl);
+        ['0', '1', '2'].forEach(function(numChar) {
+          // Reset number to gray
+          document.getElementById('num-question-' + numChar).className = 'quiz-num-block _2';
+        })
+        STATE.questionIndex++;
 
-      // choicesEl.appendChild(choiceContainerEl);
+        if (STATE.questionIndex >= allQuestions.length) {
+          var selectionStr = '';
+          STATE.selections.forEach(function(selection) {
+            selectionStr = selectionStr.concat(selection);
+          });
 
-      $('#choices').append('<div class="radio"><label><input type="radio" name="choices" id="' + choiceId + '" value="' + choiceId + '">' + choice + '</label></div>')
+          questionEl.style.display = 'none';
+          choicesEl.style.display = 'none';
+
+          var resultsEl = document.getElementById('results');
+          resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
+        } else {
+          renderQuestion();
+        }
+      });
+
+      choicesEl.appendChild(choiceButtonEl);
     });
   }
 
   renderQuestion();
-
-  nextButton.addEventListener('click', function() {
-    var selectionMade = false;
-    var selectedChoiceId;
-    choicesEl.querySelectorAll('input').forEach(function(el) {
-      if (el.checked) {
-        selectedChoiceId = el.value;
-        selectionMade = true;
-      }
-    });
-
-    if (selectionMade) {
-      STATE.selections.push(selectedChoiceId);
-
-      cleanupNode(choicesEl);
-
-      STATE.questionIndex++;
-
-      if (STATE.questionIndex >= allQuestions.length) {
-        var selectionStr = '';
-        STATE.selections.forEach(function(selection) {
-          selectionStr = selectionStr.concat(selection);
-        });
-
-        nextButton.style.display = 'none';
-        questionEl.style.display = 'none';
-        choicesEl.style.display = 'none';
-
-        var resultsEl = document.getElementById('results');
-        resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
-      } else {
-        renderQuestion();
-      }
-    } else {
-      // DEBUG:
-      console.log('Selection not made.');
-    }
-  });
 });
