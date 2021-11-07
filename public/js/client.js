@@ -23,6 +23,9 @@ var allQuestions = [
     question: 'I want to...',
     choices: ['Disinfect the area', 'Purify the air', 'Disinfect & purify']
   },
+  {
+    choices: ['Reset']  // Results will be displayed at this point. Question to be filled out based on outcome
+  }
 ];
 
 var allOutcomes = {
@@ -135,10 +138,19 @@ window.addEventListener('load', function() {
   var choicesEl = document.getElementById('choices-container');
 
   function renderQuestion() {
-    var currentNumQuestionEl = document.getElementById('num-question-' + STATE.questionIndex);
-    currentNumQuestionEl.style = 'background-color: #3a75ff;';
+    if (STATE.questionIndex < allQuestions.length - 1) {  // -1 because of reset question
+      var currentNumQuestionEl = document.getElementById('num-question-' + STATE.questionIndex);
+      currentNumQuestionEl.style = 'background-color: #3a75ff;';
+      questionEl.textContent = allQuestions[STATE.questionIndex].question;
+    } else {
+      // Set outcome as final 'reset' question
+      var selectionStr = '';
+      STATE.selections.forEach(function(selection) {
+        selectionStr = selectionStr.concat(selection);
+      });
 
-    questionEl.textContent = allQuestions[STATE.questionIndex].question;
+      questionEl.textContent = allOutcomes[selectionStr].description;
+    }
 
     allQuestions[STATE.questionIndex].choices.forEach(function(choice, choiceIndex) {
       var choiceId = '' + STATE.questionIndex + choiceIndex;
@@ -163,24 +175,18 @@ window.addEventListener('load', function() {
         cleanupNode(choicesEl);
         ['0', '1', '2'].forEach(function(numChar) {
           // Reset number to gray
-          document.getElementById('num-question-' + numChar).style = 'background-color: #cecedf;';
+          var el = document.getElementById('num-question-' + numChar);
+          if (el.hasAttribute('style'))  el.removeAttribute('style');
         });
+
         STATE.questionIndex++;
-
-        if (STATE.questionIndex >= allQuestions.length) {
-          var selectionStr = '';
-          STATE.selections.forEach(function(selection) {
-            selectionStr = selectionStr.concat(selection);
-          });
-
-          questionEl.style.display = 'none';
-          choicesEl.style.display = 'none';
-
-          var resultsEl = document.getElementById('results');
-          resultsEl.textContent = allOutcomes[selectionStr].description + '  (Dummy Product ID: ' + allOutcomes[selectionStr].productId + ').';
-        } else {
-          renderQuestion();
+        if (STATE.questionIndex === allQuestions.length) {
+          // If we get here the reset button was pressed.
+          STATE.questionIndex = 0;
+          STATE.selections = [];
         }
+
+        renderQuestion();
       });
 
       choicesEl.appendChild(choiceButtonEl);
