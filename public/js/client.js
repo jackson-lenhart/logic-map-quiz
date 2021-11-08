@@ -136,9 +136,17 @@ function cleanupNode(node) {
 window.addEventListener('load', function() {
   var questionEl = document.getElementById('question');
   var choicesEl = document.getElementById('choices-container');
+  var resultsEl = document.getElementById('results');
 
   function renderQuestion() {
     if (STATE.questionIndex < allQuestions.length - 1) {  // -1 because of reset question
+      // DEBUG:
+      console.log('Results el equal to empty string?:', resultsEl.textContent === '');
+
+      if (resultsEl.textContent !== '')  resultsEl.textContent = '';
+
+      if (questionEl.hasAttribute('style'))  questionEl.removeAttribute('style');
+
       var currentNumQuestionEl = document.getElementById('num-question-' + STATE.questionIndex);
       currentNumQuestionEl.style = 'background-color: #3a75ff;';
       questionEl.textContent = allQuestions[STATE.questionIndex].question;
@@ -149,7 +157,8 @@ window.addEventListener('load', function() {
         selectionStr = selectionStr.concat(selection);
       });
 
-      questionEl.textContent = allOutcomes[selectionStr].description;
+      questionEl.textContent = '';
+      resultsEl.textContent = allOutcomes[selectionStr].description;
     }
 
     allQuestions[STATE.questionIndex].choices.forEach(function(choice, choiceIndex) {
